@@ -9,6 +9,7 @@ fi
 # Assign arguments to variables
 FILE_PATH="$1"
 NUM_FILES="$2"
+BASE_NAME=$(basename "$FILE_PATH" | cut -d. -f1)
 
 # Convert .m4a to .mp3 if necessary
 EXT="${FILE_PATH##*.}"
@@ -24,9 +25,17 @@ DURATION=$(soxi -D "$FILE_PATH")
 # Calculate the duration of each segment
 SEGMENT_DURATION=$(echo "$DURATION / $NUM_FILES" | bc -l)
 
+# Function to convert seconds to minutes:seconds format
+convert_to_min_sec() {
+    printf "%02d_%02d" $(($1/60)) $(($1%60))
+}
+
 # Split the audio file
 for ((i=0; i<NUM_FILES; i++)); do
     START_TIME=$(echo "$i * $SEGMENT_DURATION" | bc -l)
-    sox "$FILE_PATH" "segment_$i.mp3" trim "$START_TIME" "$SEGMENT_DURATION"
+    END_TIME=$(echo "($i + 1) * $SEGMENT_DURATION" | bc -l)
+    START_MIN_SEC=$(convert_to_min_sec ${START_TIME%.*})
+    END_MIN_SEC=$(convert_to_min_sec ${END_TIME%.*})
+    sox "$FILE_PATH" "${BASE_NAME}-part${i+1}-${START_MIN_SEC}-to-${END_MIN_SEC}.mp3" trim "$START_TIME" "$SEGMENT_DURATION"
 done
 
