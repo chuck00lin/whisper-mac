@@ -36,6 +36,6 @@ for ((i=0; i<NUM_FILES; i++)); do
     END_TIME=$(echo "($i + 1) * $SEGMENT_DURATION" | bc -l)
     START_MIN_SEC=$(convert_to_min_sec ${START_TIME%.*})
     END_MIN_SEC=$(convert_to_min_sec ${END_TIME%.*})
-    sox "$FILE_PATH" "${BASE_NAME}-part${i+1}-${START_MIN_SEC}-to-${END_MIN_SEC}.mp3" trim "$START_TIME" "$SEGMENT_DURATION"
+    sox "$FILE_PATH" "${BASE_NAME}-part${i}-${START_MIN_SEC}-to-${END_MIN_SEC}.mp3" trim "$START_TIME" "$SEGMENT_DURATION"
 done
 
