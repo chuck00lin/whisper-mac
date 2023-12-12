@@ -11,10 +11,14 @@ FILE_PATH="$1"
 NUM_FILES="$2"
 BASE_NAME=$(basename "$FILE_PATH" | cut -d. -f1)
 
+# Create a directory for split files
+OUTPUT_DIR="./${BASE_NAME}"
+mkdir -p "$OUTPUT_DIR"
+
 # Convert .m4a to .mp3 if necessary
 EXT="${FILE_PATH##*.}"
 if [ "$EXT" = "m4a" ]; then
-    MP3_FILE="${FILE_PATH%.*}.mp3"
+    MP3_FILE="${OUTPUT_DIR}/${BASE_NAME}.mp3"
     ffmpeg -i "$FILE_PATH" -codec:a libmp3lame -qscale:a 2 "$MP3_FILE"
     FILE_PATH="$MP3_FILE"
 fi
@@ -25,7 +29,7 @@ DURATION=$(soxi -D "$FILE_PATH")
 # Calculate the duration of each segment
 SEGMENT_DURATION=$(echo "$DURATION / $NUM_FILES" | bc -l)
 
-# Function to convert seconds to minutes:seconds format
+# Function to convert seconds to minutes_seconds format
 convert_to_min_sec() {
     printf "%02d_%02d" $(($1/60)) $(($1%60))
 }
@@ -36,6 +40,6 @@ for ((i=0; i<NUM_FILES; i++)); do
     END_TIME=$(echo "($i + 1) * $SEGMENT_DURATION" | bc -l)
     START_MIN_SEC=$(convert_to_min_sec ${START_TIME%.*})
     END_MIN_SEC=$(convert_to_min_sec ${END_TIME%.*})
-    sox "$FILE_PATH" "${BASE_NAME}-part${i}-${START_MIN_SEC}-to-${END_MIN_SEC}.mp3" trim "$START_TIME" "$SEGMENT_DURATION"
+    sox "$FILE_PATH" "${OUTPUT_DIR}/${BASE_NAME}-part${i}-${START_MIN_SEC}-to-${END_MIN_SEC}.mp3" trim "$START_TIME" "$SEGMENT_DURATION"
 done
 
