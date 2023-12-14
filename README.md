@@ -20,11 +20,24 @@ brew install ffmpeg
 ```
 
 
-2. Upload audio file to your chatgpt-api shortcuts
+2. integrate with shortcuts
+- shortcut that upload audio file to chatgpt-api
 https://www.icloud.com/shortcuts/a80280b4e55c4956aebe7c37fd77891b
 (put your own api key in the shortcut)
+- shortcut that call the split_audio.sh
+https://www.icloud.com/shortcuts/94028db355fd4d31b3d1ed07145161c8
 
 ## Usage
 1. Record your audio file with your phone or other devices. (I put it to my iCloud Drive)
 2. Use the script to split the audio file into pieces (Optional)
 3. Run the shortcut and get the transcript. Chose the audio file you want to transcript and wait for the result.
+
+---
+- [Not solved] short cut to split audio file on menu bar is permisson denied (Can work in other space)
+https://discussions.apple.com/thread/255210852?sortBy=best
+
+- sox not found, because of the environment variable PATH of homebrew
+https://www.reddit.com/r/shortcuts/comments/soes9k/shortcuts_on_mac_does_the_run_shell_script_action/
+
+- passing varibales to AppleScript
+https://stackoverflow.com/questions/75050616/passing-variables-from-apple-shortcuts-to-applescript-and-returning-the-result
