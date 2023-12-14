@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Adding Homebrew's bin directory to PATH
+PATH="/opt/homebrew/bin:$PATH"
+
 # Check if two arguments are given
 if [ "$#" -ne 2 ]; then
     echo "Usage: $0 <audio file path> <number of files>"
